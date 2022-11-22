@@ -1,2 +1,4 @@
-package pro.medguide.MedGuideTelegramBot.handlers;public class CallbackQueryHandler {
+package pro.medguide.MedGuideTelegramBot.handlers;
+
+public class CallbackQueryHandler {
 }
