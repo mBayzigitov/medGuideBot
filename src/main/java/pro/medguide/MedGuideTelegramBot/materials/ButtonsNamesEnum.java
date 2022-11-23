@@ -1,8 +1,9 @@
-package pro.medguide.MedGuideTelegramBot;
+package pro.medguide.MedGuideTelegramBot.materials;
 
 public enum ButtonsNamesEnum {
 
     CONTACT_US("Контактная информация"),
+    HIDE_KEYBOARD("Скрыть"),
     SPECIALISTS("Специалисты"),
     RECEPTION_ADRESSES("Адреса приёма"),
     PARTNER_DISCOUNTS("Скидки от партнёра"),
