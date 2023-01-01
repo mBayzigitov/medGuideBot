@@ -17,6 +17,7 @@ import pro.medguide.MedGuideTelegramBot.handlers.CallbackQueryHandler;
 import pro.medguide.MedGuideTelegramBot.handlers.MessageHandler;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 @Getter
 @Setter
@@ -27,6 +28,8 @@ public class MedGuideBot extends SpringWebhookBot {
 
     MessageHandler messageHandler;
     CallbackQueryHandler callbackQueryHandler;
+
+    private static HashMap<String, String> usersStates;
 
     public MedGuideBot(SetWebhook setWebhook, MessageHandler messageHandler, CallbackQueryHandler callbackQueryHandler) {
         super(setWebhook);
