@@ -58,19 +58,19 @@ public class ReplyKeyboardMaker {
     public ReplyKeyboardMarkup getSpecialistsKeyboard() {
 
         KeyboardRow row_1 = new KeyboardRow();
-        row_1.add("Врач общей практики, терапевт");
-        row_1.add("Хэлс-коуч, нутрициолог");
+        row_1.add("Гастроэнтеролог");
+        row_1.add("Психолог");
 
         KeyboardRow row_2 = new KeyboardRow();
-        row_2.add("Дерматовенеролог, Косметолог, Хирург");
-        row_2.add("Кардиолог, Терапевт, Аллерголог, Пульмонолог");
+        row_2.add("Врач общей практики, терапевт");
+        row_2.add("Терапевт");
 
         KeyboardRow row_3 = new KeyboardRow();
+        row_3.add("Кардиолог");
         row_3.add("Генетик");
-        row_3.add("Терапевт, Гастроэнтеролог, Диетолог");
 
         KeyboardRow row_4 = new KeyboardRow();
-        row_4.add("Дерматолог, Гомеопат");
+        row_4.add("Дерматовенеролог");
 
         KeyboardRow row_5 = new KeyboardRow();
         row_5.add("↩️ Назад");

@@ -5,19 +5,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import pro.medguide.MedGuideTelegramBot.materials.ButtonsNamesEnum;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pro.medguide.MedGuideTelegramBot.materials.UsersStates;
 import pro.medguide.MedGuideTelegramBot.telegramData.ReplyKeyboardMaker;
 
 import java.io.File;
@@ -26,14 +23,16 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+import static pro.medguide.MedGuideTelegramBot.service.MedGuideBot.usersStates;
+
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class MessageHandler {
 
-    ReplyKeyboardMaker replyKeyboardMaker;
+    static ReplyKeyboardMaker replyKeyboardMaker = new ReplyKeyboardMaker();
 
-    public BotApiMethod<?> handleMessage(Message message) throws FileNotFoundException {
+    public BotApiMethod<?> handleMessage(Message message) throws FileNotFoundException, TelegramApiException {
 
         String chatID = message.getChatId().toString();
         String inputText = message.getText();
@@ -73,6 +72,8 @@ public class MessageHandler {
 
             case "\uD83D\uDC69\u200D⚕️ Специалисты" -> {
 
+                usersStates.put(chatID, String.valueOf(UsersStates.SPECIALISTS));
+
                 SendMessage sendMessage = new SendMessage();
 
                 sendMessage.setChatId(chatID);
@@ -85,6 +86,8 @@ public class MessageHandler {
             }
 
             case "↩️ Назад" -> {
+                usersStates.put(chatID, String.valueOf(UsersStates.STATIC));
+
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(chatID);
                 sendMessage.setText("↩️ Назад");

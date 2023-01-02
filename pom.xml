@@ -12,7 +12,7 @@
 	<artifactId>MedGuideTelegramBot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MedGuideTelegramBot</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Telegram bot for MedGuide website</description>
 	<properties>
 		<java.version>17</java.version>
 		<telegram.version>6.3.0</telegram.version>
