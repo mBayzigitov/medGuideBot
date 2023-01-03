@@ -92,4 +92,24 @@ public class ReplyKeyboardMaker {
 
     }
 
+    public InlineKeyboardMarkup getCountriesNamesButton() {
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton button_1 = new InlineKeyboardButton();
+        button_1.setText("\uD83C\uDDF7\uD83C\uDDFA Россия");
+        button_1.setCallbackData("CHOSE_RU");
+
+        InlineKeyboardButton button_2 = new InlineKeyboardButton();
+        button_2.setText("\uD83C\uDDF0\uD83C\uDDFF Казахстан");
+        button_2.setCallbackData("CHOSE_KZ");
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+
+        rowList.add(List.of(button_1, button_2));
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
+
+    }
 }

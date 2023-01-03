@@ -95,6 +95,56 @@ public class MessageHandler {
                 return sendMessage;
             }
 
+            case "\uD83C\uDFE5 Адреса приёма" -> {
+                SendMessage sendMessage = new SendMessage();
+
+                sendMessage.setChatId(chatID);
+                sendMessage.setParseMode(ParseMode.HTML);
+                sendMessage.setText("<b>Выберите интересующую вас страну:</b>");
+                sendMessage.setReplyMarkup(replyKeyboardMaker.getCountriesNamesButton());
+
+                return sendMessage;
+            }
+
+            case "\uD83D\uDCC8 Скидки от партнёра" -> {
+                SendMessage discountsMessage = new SendMessage();
+
+                discountsMessage.setChatId(chatID);
+                discountsMessage.setParseMode(ParseMode.HTML);
+                discountsMessage.setText("\uD83D\uDD39 <b>БакЗдрав</b> - производитель пробиотиков\n" +
+                        "<a href=\"https://bakzdrav.ru/internet-magazin.html?refcode=medgid.pro&refsource=a9t81bho\">Получить скидку</a>\n\n" +
+                        "\uD83D\uDD39 <b>Daigo – японская биологически активная добавка к пище.</b>\n" +
+                        "БАД к пище «Дайго» является дополнительным источником витамина К2\n" +
+                        "<a href=\"https://daigo.ru/?utm_source=vd&utm_medium=cpc&utm_campaign=test&utm_content=link&utm_term=medgidpro\">Перейти на сайт</a>\n\n" +
+                        "\uD83D\uDD39 <b>МаПа</b> — Клиника превентивной медицины в Санкт-Петербурге.\n" +
+                        "мы с радостью подарим Вам приветственные 700 Б на первую покупку по промокоду МедГид.pro. 1 Б = 1 рубль. Подробности программы лояльности доступны после регистрации.\n" +
+                        "<a href=\"https://mapaclinic.uds.app/c/join?ref=medpro200\">Получить скидку</a>\n\n" +
+                        "\uD83D\uDD39 Готовая еда для беременных и кормящих матерей с доставкой от <b>Накормим маму</b>\n" +
+                        "Заказать можно на <a href=\"www.nakormimmamu.ru\">сайте</a> или по WhatsApp 89256109847, при использовании " +
+                        "промокода «МЕДГИД.ПРО» получаете 5% скидку на заказ\n\n" +
+                        "\uD83D\uDD39 <b>Эстетик поинт</b> — интернет-магазин косметики и средств по уходу за лицом, телом и волосами, а также b2b портал " +
+                        "для косметологов, салонов красоты и компаний-дистрибьюторов.\n" +
+                        "<a href=\"https://medgid.pro/rekomenduem/#ESTHETICS-POINT\">Получить скидку</a>");
+
+                return discountsMessage;
+            }
+
+            case "\uD83D\uDCB3 Информация об оплате" -> {
+                SendPhoto paymentsInfoMessage = new SendPhoto();
+
+                paymentsInfoMessage.setChatId(chatID);
+                paymentsInfoMessage.setParseMode(ParseMode.HTML);
+                paymentsInfoMessage.setCaption("<b>Оплата</b>\n\n" +
+                        "✅ После подтверждения доктора, мы отправим Вам ответ на <b>электронную почту</b>.\n" +
+                        "✅ Отсканируйте <b>QR-код</b> банковским приложением\n" +
+                        "✅ В назначении платежа укажите ФИО и наименование услуги. Например, Иванов.И.И. - анализ " +
+                        "ХМС или другая услуга. В поле \"Сумма\" введите сумму заказа, которую вам рассчитал наш специалист.\n\n" +
+                        "<b>Для оплаты откройте ваше банковское приложение, выберите \"Оплата по QR-коду\", наведите камеру телефона на QR код. " +
+                        "Реквизиты для перевода автоматически подставятся в данные платежа.</b>");
+                paymentsInfoMessage.setPhoto(new InputFile(
+                        new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/payment_qr.png")));
+            }
+
         }
 
         // PLUG
