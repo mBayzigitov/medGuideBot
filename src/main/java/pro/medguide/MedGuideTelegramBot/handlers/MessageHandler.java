@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -15,12 +14,10 @@ import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.medguide.MedGuideTelegramBot.materials.UsersStates;
-import pro.medguide.MedGuideTelegramBot.telegramData.ReplyKeyboardMaker;
+import pro.medguide.MedGuideTelegramBot.telegramData.KeyboardCreator;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Optional;
 
 import static pro.medguide.MedGuideTelegramBot.service.MedGuideBot.usersStates;
@@ -30,9 +27,9 @@ import static pro.medguide.MedGuideTelegramBot.service.MedGuideBot.usersStates;
 @RequiredArgsConstructor
 public class MessageHandler {
 
-    static ReplyKeyboardMaker replyKeyboardMaker = new ReplyKeyboardMaker();
+    static KeyboardCreator keyboardCreator = new KeyboardCreator();
 
-    public BotApiMethod<?> handleMessage(Message message) throws FileNotFoundException, TelegramApiException {
+    public BotApiMethod<?> handleMessage(Message message) {
 
         String chatID = message.getChatId().toString();
         String inputText = message.getText();
@@ -41,16 +38,11 @@ public class MessageHandler {
             throw new IllegalArgumentException();
         }
 
+        // handling usual messages and queries from main keyboard
         switch (inputText) {
 
             case "⬇️ Скрыть" -> {
-                SendMessage sendMessage = new SendMessage(chatID,
-                        "Панель скрыта. Для отображения меню воспользуйтесь командой /showkeyboard");
-
-                sendMessage.enableMarkdown(true);
-                sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
-
-                return sendMessage;
+                return hideKeyboard(chatID);
             }
 
             case "ℹ️ Контактная информация" -> {
@@ -79,7 +71,7 @@ public class MessageHandler {
                 sendMessage.setChatId(chatID);
                 sendMessage.setText("\uD83D\uDC68\u200D⚕️ <b>Выберите интересующего вас специалиста:</b>");
                 sendMessage.setParseMode(ParseMode.HTML);
-                sendMessage.setReplyMarkup(replyKeyboardMaker.getSpecialistsKeyboard());
+                sendMessage.setReplyMarkup(keyboardCreator.getSpecialistsKeyboard());
 
                 return sendMessage;
 
@@ -91,7 +83,7 @@ public class MessageHandler {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(chatID);
                 sendMessage.setText("↩️ Назад");
-                sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard());
+                sendMessage.setReplyMarkup(keyboardCreator.getMainMenuKeyboard());
                 return sendMessage;
             }
 
@@ -101,7 +93,7 @@ public class MessageHandler {
                 sendMessage.setChatId(chatID);
                 sendMessage.setParseMode(ParseMode.HTML);
                 sendMessage.setText("<b>Выберите интересующую вас страну:</b>");
-                sendMessage.setReplyMarkup(replyKeyboardMaker.getCountriesNamesButton());
+                sendMessage.setReplyMarkup(keyboardCreator.getCountriesNamesButton());
 
                 return sendMessage;
             }
@@ -145,18 +137,86 @@ public class MessageHandler {
                         new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/payment_qr.png")));
             }
 
+            case "\uD83D\uDC8A Услуги" -> {
+                SendMessage servicesMessage = new SendMessage();
+
+                servicesMessage.setChatId(chatID);
+                servicesMessage.setParseMode(ParseMode.HTML);
+                servicesMessage.setText("<b>Выберите услуги в панели:</b>");
+                servicesMessage.setReplyMarkup(keyboardCreator.getServicesKeyboard());
+
+                return servicesMessage;
+            }
+
+            case "✅ Заказать набор \"Сухая капля\"" -> {
+                SendMessage serviceMessage = new SendMessage();
+
+                serviceMessage.setChatId(chatID);
+                serviceMessage.setParseMode(ParseMode.HTML);
+                serviceMessage.setText("✅ Услуга - заказ набора \"Сухая капля\"\n\n" +
+                        "Перейдите по <a href=\"https://medgid.pro/uslugi/sdat-analiz-zakazat-nabor-suhaya-" +
+                        "kaplya-ghms-po-osipovu-mikrobnye-markery/\">ссылке</a> и следуйте инструкциям\n\n" +
+                        "<b>Информацию об оплате</b> можно посмотреть в главном меню или на сайте");
+
+                return serviceMessage;
+            }
+
+            case "✅ Заказать \"расшифровку анализа ХМС и/или других клинических анализов\"" -> {
+                SendMessage serviceMessage = new SendMessage();
+
+                serviceMessage.setChatId(chatID);
+                serviceMessage.setParseMode(ParseMode.HTML);
+                serviceMessage.setText("✅ Услуга - заказ расшифровки анализов\n\n" +
+                        "Перейдите по <a href=\"https://medgid.pro/uslugi/poluchit-rasshifrovku-analiza-" +
+                        "diagnostiki-interpretacziyu/\">ссылке</a> и следуйте инструкциям\n\n" +
+                        "<b>Информацию об оплате</b> можно посмотреть в главном меню или на сайте");
+
+                return serviceMessage;
+            }
+
+            case "✅ Получить индивидуально схему приема пробиотиков на основе анализа" -> {
+                SendMessage serviceMessage = new SendMessage();
+
+                serviceMessage.setChatId(chatID);
+                serviceMessage.setParseMode(ParseMode.HTML);
+                serviceMessage.setText("✅ Услуга - индивидуальная схема пробиотиков от \"БакЗдрав\"\n\n" +
+                        "Перейдите по <a href=\"https://medgid.pro/uslugi/podbor-probiotika-s-" +
+                        "uchetom-vashego-analiza-hms-po-osipovu/\">ссылке</a> и следуйте инструкциям\n\n" +
+                        "<b>Информацию об оплате</b> можно посмотреть в главном меню или на сайте");
+
+                return serviceMessage;
+            }
+
+            case "✅ Записаться на онлайн-консультацию к специалисту" -> {
+                SendMessage serviceMessage = new SendMessage();
+
+                serviceMessage.setChatId(chatID);
+                serviceMessage.setParseMode(ParseMode.HTML);
+                serviceMessage.setText("✅ Услуга - онлайн-консультация со специалистом\n\n" +
+                        "Перейдите по <a href=\"https://medgid.pro/uslugi/zapisatsya-na-" +
+                        "konsultacziyu-k-doktoru-udalyonno/\">ссылке</a> и следуйте инструкциям\n\n" +
+                        "<b>Информацию об оплате</b> можно посмотреть в главном меню или на сайте");
+
+                return serviceMessage;
+            }
+
+            case "✅ Заказать анализ на COVID-19 с доставкой на дом" -> {
+                SendMessage serviceMessage = new SendMessage();
+
+                serviceMessage.setChatId(chatID);
+                serviceMessage.setParseMode(ParseMode.HTML);
+                serviceMessage.setText("✅ Услуга - онлайн-консультация со специалистом\n\n" +
+                        "Перейдите по <a href=\"https://medgid.pro/uslugi/zakazat-analiz-na-" +
+                        "covid-19-s-dostavkoj-na-dom/\">ссылке</a> и следуйте инструкциям\n\n" +
+                        "<b>Информацию об оплате</b> можно посмотреть в главном меню или на сайте");
+
+                return serviceMessage;
+            }
+
         }
 
-        // PLUG
-        return null;
+        return new SendMessage(chatID, "\uD83E\uDD37\uD83C\uDFFB\u200D♀️ На данный момент ни одна команда не используется.");
 
-    }
-
-    public SendMessage getStartMessage(String chatID) {
-        SendMessage sendMessage = new SendMessage(chatID, "Здравствуйте! Воспользуйтесь клавиатурой выбора услуги");
-        sendMessage.enableMarkdown(true);
-        sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard());
-        return sendMessage;
     }
 
     public BotApiMethod<?> handleCommand(Message message) {
@@ -173,24 +233,43 @@ public class MessageHandler {
             switch (command) {
 
                 case "/start" -> {
-                    return getStartMessage(chatID);
+                    usersStates.put(chatID, UsersStates.STATIC.getStateTitle());
+                    SendMessage sendMessage = new SendMessage(chatID, "Здравствуйте! Воспользуйтесь клавиатурой выбора услуги");
+                    sendMessage.enableMarkdown(true);
+                    sendMessage.setReplyMarkup(keyboardCreator.getMainMenuKeyboard());
+                    return sendMessage;
                 }
 
                 case "/showkeyboard" -> {
+                    usersStates.put(chatID, UsersStates.STATIC.getStateTitle());
                     SendMessage sendMessage = new SendMessage(chatID, "Главное меню включено");
                     sendMessage.enableMarkdown(true);
-                    sendMessage.setReplyMarkup(replyKeyboardMaker.getMainMenuKeyboard());
+                    sendMessage.setReplyMarkup(keyboardCreator.getMainMenuKeyboard());
                     return sendMessage;
+                }
+
+                case "/hidekeyboard" -> {
+                    return hideKeyboard(chatID);
                 }
 
             }
 
         }
 
+        return new SendMessage(chatID, "\uD83E\uDD37\uD83C\uDFFB\u200D♀️ Введенная команда никак не используется. Пожалуйста, воспользуйтесь списком команд в меню.");
 
-        // PLUG
-        return null;
+    }
 
+    private BotApiMethod<?> hideKeyboard(String chatID) {
+        usersStates.put(chatID, UsersStates.STATIC.getStateTitle());
+
+        SendMessage sendMessage = new SendMessage(chatID,
+                "Панель скрыта. Для отображения меню воспользуйтесь командой /showkeyboard");
+
+        sendMessage.enableMarkdown(true);
+        sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
+
+        return sendMessage;
     }
 
 }

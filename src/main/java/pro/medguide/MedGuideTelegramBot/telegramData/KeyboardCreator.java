@@ -1,23 +1,18 @@
 package pro.medguide.MedGuideTelegramBot.telegramData;
 
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.bots.AbsSender;
 import pro.medguide.MedGuideTelegramBot.materials.ButtonsNamesEnum;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 @Component
-public class ReplyKeyboardMaker {
+public class KeyboardCreator {
 
     public ReplyKeyboardMarkup getMainMenuKeyboard() {
 
@@ -73,7 +68,11 @@ public class ReplyKeyboardMaker {
         row_4.add("Дерматовенеролог");
 
         KeyboardRow row_5 = new KeyboardRow();
-        row_5.add("↩️ Назад");
+        row_5.add("Хэлс коуч");
+        row_5.add("Нутрициолог");
+
+        KeyboardRow row_6 = new KeyboardRow();
+        row_6.add("↩️ Назад");
 
         List<KeyboardRow> keyboardRowList = new ArrayList<>();
         keyboardRowList.add(row_1);
@@ -81,6 +80,7 @@ public class ReplyKeyboardMaker {
         keyboardRowList.add(row_3);
         keyboardRowList.add(row_4);
         keyboardRowList.add(row_5);
+        keyboardRowList.add(row_6);
 
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
@@ -110,6 +110,44 @@ public class ReplyKeyboardMaker {
         inlineKeyboardMarkup.setKeyboard(rowList);
 
         return inlineKeyboardMarkup;
+
+    }
+
+    public ReplyKeyboard getServicesKeyboard() {
+
+        KeyboardRow row_1 = new KeyboardRow();
+        row_1.add("✅ Заказать набор \"Сухая капля\"");
+
+        KeyboardRow row_2 = new KeyboardRow();
+        row_2.add("✅ Заказать \"расшифровку анализа ХМС и/или других клинических анализов\"");
+
+        KeyboardRow row_3 = new KeyboardRow();
+        row_3.add("✅ Получить индивидуально схему приема пробиотиков на основе анализа");
+
+        KeyboardRow row_4 = new KeyboardRow();
+        row_4.add("✅ Записаться на онлайн-консультацию к специалисту");
+
+        KeyboardRow row_5 = new KeyboardRow();
+        row_5.add("✅ Заказать анализ на COVID-19 с доставкой на дом");
+
+        KeyboardRow row_6 = new KeyboardRow();
+        row_6.add("↩️ Назад");
+
+        List<KeyboardRow> keyboardRowList = new ArrayList<>();
+        keyboardRowList.add(row_1);
+        keyboardRowList.add(row_2);
+        keyboardRowList.add(row_3);
+        keyboardRowList.add(row_4);
+        keyboardRowList.add(row_5);
+        keyboardRowList.add(row_6);
+
+        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        return replyKeyboardMarkup;
 
     }
 }

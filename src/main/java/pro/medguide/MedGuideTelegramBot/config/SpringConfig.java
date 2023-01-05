@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
-import pro.medguide.MedGuideTelegramBot.handlers.CallbackQueryHandler;
 import pro.medguide.MedGuideTelegramBot.handlers.MessageHandler;
 import pro.medguide.MedGuideTelegramBot.service.MedGuideBot;
 
@@ -20,9 +19,8 @@ public class SpringConfig {
 
     @Bean
     public MedGuideBot springWebhookBot(SetWebhook setWebhook,
-                                        MessageHandler messageHandler,
-                                        CallbackQueryHandler callbackQueryHandler) {
-        MedGuideBot bot = new MedGuideBot(setWebhook, messageHandler, callbackQueryHandler);
+                                        MessageHandler messageHandler) {
+        MedGuideBot bot = new MedGuideBot(setWebhook, messageHandler);
 
         bot.setBotPath(telegramConfig.getWebhookPath());
         bot.setBotUsername(telegramConfig.getBotName());
