@@ -201,7 +201,7 @@ public class MedGuideBot extends SpringWebhookBot {
 
                         case "Дерматовенеролог, косметолог" -> {
                             sendPhoto.setChatId(chatID);
-                            sendPhoto.setCaption("<b>Дерматовенеролог, косметоло - Пейкова Элина Викторовна</b>\n" +
+                            sendPhoto.setCaption("<b>Дерматовенеролог, косметолог - Пейкова Элина Викторовна</b>\n" +
                                     "Подробнее <a href=\"https://medgid.pro/specialist/pejkova-elina-viktorovna/\">по ссылке</a>");
                             sendPhoto.setPhoto(new InputFile(
                                     new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/peykova_e_v.jpg")));
