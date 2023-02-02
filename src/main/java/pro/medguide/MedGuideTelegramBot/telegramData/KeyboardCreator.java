@@ -65,7 +65,7 @@ public class KeyboardCreator {
         row_3.add("Генетик");
 
         KeyboardRow row_4 = new KeyboardRow();
-        row_4.add("Дерматовенеролог");
+        row_4.add("Дерматовенеролог, косметолог");
 
         KeyboardRow row_5 = new KeyboardRow();
         row_5.add("Хэлс коуч");
@@ -128,10 +128,7 @@ public class KeyboardCreator {
         row_4.add("✅ Записаться на онлайн-консультацию к специалисту");
 
         KeyboardRow row_5 = new KeyboardRow();
-        row_5.add("✅ Заказать анализ на COVID-19 с доставкой на дом");
-
-        KeyboardRow row_6 = new KeyboardRow();
-        row_6.add("↩️ Назад");
+        row_5.add("↩️ Назад");
 
         List<KeyboardRow> keyboardRowList = new ArrayList<>();
         keyboardRowList.add(row_1);
@@ -139,7 +136,6 @@ public class KeyboardCreator {
         keyboardRowList.add(row_3);
         keyboardRowList.add(row_4);
         keyboardRowList.add(row_5);
-        keyboardRowList.add(row_6);
 
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(keyboardRowList);

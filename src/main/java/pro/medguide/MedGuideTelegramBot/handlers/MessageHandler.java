@@ -12,14 +12,15 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pro.medguide.MedGuideTelegramBot.MedGuideTelegramBotApplication;
 import pro.medguide.MedGuideTelegramBot.materials.UsersStates;
+import pro.medguide.MedGuideTelegramBot.service.MedGuideBot;
 import pro.medguide.MedGuideTelegramBot.telegramData.KeyboardCreator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Optional;
 
+import static pro.medguide.MedGuideTelegramBot.service.MedGuideBot.buttonsClickCounter;
 import static pro.medguide.MedGuideTelegramBot.service.MedGuideBot.usersStates;
 
 @Component
@@ -38,14 +39,29 @@ public class MessageHandler {
             throw new IllegalArgumentException();
         }
 
+        if (chatID.equals("2024480073") && inputText.equals("info")) {
+            return new SendMessage("2024480073",
+                    "\uD83D\uDCC8 Статистика\n\n" +
+                            "Всего пользователей: " + MedGuideBot.usersCounter + "\n" +
+                            "Запросов на заказ: " + MedGuideBot.counterOfOrdersRequests + "\n" +
+                            "Нажатий на кнопки: " + buttonsClickCounter);
+        }
+
         // handling usual messages and queries from main keyboard
         switch (inputText) {
 
             case "⬇️ Скрыть" -> {
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Скрыть\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
                 return hideKeyboard(chatID);
             }
 
             case "ℹ️ Контактная информация" -> {
+
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Контактная информация\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
 
                 return new SendMessage(chatID, "\uD83D\uDCCD Адрес\n" +
                         "\tМосква, ул. А. Солженицына 27 офис 425\n\n" +
@@ -64,6 +80,10 @@ public class MessageHandler {
 
             case "\uD83D\uDC69\u200D⚕️ Специалисты" -> {
 
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Специалисты\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
+
                 usersStates.put(chatID, String.valueOf(UsersStates.SPECIALISTS));
 
                 SendMessage sendMessage = new SendMessage();
@@ -78,6 +98,11 @@ public class MessageHandler {
             }
 
             case "↩️ Назад" -> {
+
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Назад\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
+
                 usersStates.put(chatID, String.valueOf(UsersStates.STATIC));
 
                 SendMessage sendMessage = new SendMessage();
@@ -88,6 +113,10 @@ public class MessageHandler {
             }
 
             case "\uD83C\uDFE5 Адреса приёма" -> {
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Адреса приёма\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
+
                 SendMessage sendMessage = new SendMessage();
 
                 sendMessage.setChatId(chatID);
@@ -99,6 +128,11 @@ public class MessageHandler {
             }
 
             case "\uD83D\uDCC8 Скидки от партнёра" -> {
+
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Скидки от партнёра\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
+
                 SendMessage discountsMessage = new SendMessage();
 
                 discountsMessage.setChatId(chatID);
@@ -122,6 +156,11 @@ public class MessageHandler {
             }
 
             case "\uD83D\uDCB3 Информация об оплате" -> {
+
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Информация об оплате\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
+
                 SendPhoto paymentsInfoMessage = new SendPhoto();
 
                 paymentsInfoMessage.setChatId(chatID);
@@ -138,6 +177,11 @@ public class MessageHandler {
             }
 
             case "\uD83D\uDC8A Услуги" -> {
+
+                MedGuideBot.buttonsClickCounter++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] has clicked on \"Информация об оплате\" button.\n" +
+                        "Current number of buttons clicks: " + buttonsClickCounter);
+
                 SendMessage servicesMessage = new SendMessage();
 
                 servicesMessage.setChatId(chatID);
@@ -149,6 +193,11 @@ public class MessageHandler {
             }
 
             case "✅ Заказать набор \"Сухая капля\"" -> {
+
+                MedGuideBot.counterOfOrdersRequests++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] wants to order \"Набор Сухая Капля\".\n" +
+                        "Current number of orders requests: " + MedGuideBot.counterOfOrdersRequests);
+
                 SendMessage serviceMessage = new SendMessage();
 
                 serviceMessage.setChatId(chatID);
@@ -162,6 +211,11 @@ public class MessageHandler {
             }
 
             case "✅ Заказать \"расшифровку анализа ХМС и/или других клинических анализов\"" -> {
+
+                MedGuideBot.counterOfOrdersRequests++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] wants to order \"Расшифровка анализа ХМС и/или других клинических анализов\".\n" +
+                        "Current number of orders requests: " + MedGuideBot.counterOfOrdersRequests);
+
                 SendMessage serviceMessage = new SendMessage();
 
                 serviceMessage.setChatId(chatID);
@@ -175,6 +229,11 @@ public class MessageHandler {
             }
 
             case "✅ Получить индивидуально схему приема пробиотиков на основе анализа" -> {
+
+                MedGuideBot.counterOfOrdersRequests++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] wants to order \"Индивидуальная схема приема пробиотиков\".\n" +
+                        "Current number of orders requests: " + MedGuideBot.counterOfOrdersRequests);
+
                 SendMessage serviceMessage = new SendMessage();
 
                 serviceMessage.setChatId(chatID);
@@ -188,6 +247,11 @@ public class MessageHandler {
             }
 
             case "✅ Записаться на онлайн-консультацию к специалисту" -> {
+
+                MedGuideBot.counterOfOrdersRequests++;
+                MedGuideBot.logger.info("User with ID:[" + chatID + "] wants to order \"Онлайн-консультация у специалиста\".\n" +
+                        "Current number of orders requests: " + MedGuideBot.counterOfOrdersRequests);
+
                 SendMessage serviceMessage = new SendMessage();
 
                 serviceMessage.setChatId(chatID);
@@ -195,19 +259,6 @@ public class MessageHandler {
                 serviceMessage.setText("✅ Услуга - онлайн-консультация со специалистом\n\n" +
                         "Перейдите по <a href=\"https://medgid.pro/uslugi/zapisatsya-na-" +
                         "konsultacziyu-k-doktoru-udalyonno/\">ссылке</a> и следуйте инструкциям\n\n" +
-                        "<b>Информацию об оплате</b> можно посмотреть в главном меню или на сайте");
-
-                return serviceMessage;
-            }
-
-            case "✅ Заказать анализ на COVID-19 с доставкой на дом" -> {
-                SendMessage serviceMessage = new SendMessage();
-
-                serviceMessage.setChatId(chatID);
-                serviceMessage.setParseMode(ParseMode.HTML);
-                serviceMessage.setText("✅ Услуга - онлайн-консультация со специалистом\n\n" +
-                        "Перейдите по <a href=\"https://medgid.pro/uslugi/zakazat-analiz-na-" +
-                        "covid-19-s-dostavkoj-na-dom/\">ссылке</a> и следуйте инструкциям\n\n" +
                         "<b>Информацию об оплате</b> можно посмотреть в главном меню или на сайте");
 
                 return serviceMessage;

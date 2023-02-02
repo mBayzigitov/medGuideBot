@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -28,6 +30,11 @@ public class MedGuideBot extends SpringWebhookBot {
     String botPath, botUsername, botToken;
 
     MessageHandler messageHandler;
+    public static Logger logger = LoggerFactory.getLogger(MedGuideBot.class);
+
+    public static int usersCounter;
+    public static int buttonsClickCounter;
+    public static int counterOfOrdersRequests;
 
     public static HashMap<String, String> usersStates = new HashMap<>();
 
@@ -41,7 +48,7 @@ public class MedGuideBot extends SpringWebhookBot {
         try {
             return handleUpdate(update);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return new SendMessage(update.getMessage().getChatId().toString(),"❌ Возникла ошибка, попробуйте позже.");
         }
     }
@@ -57,11 +64,18 @@ public class MedGuideBot extends SpringWebhookBot {
             chatID = update.getCallbackQuery().getMessage().getChatId().toString();
         }
 
+        if (!usersStates.containsKey(chatID)) {
+            usersCounter++;
+            logger.info("New user has connected. Current number of users: " + usersCounter);
+        }
+
         // if update is from new user, then put static state in the hashmap for him
         usersStates.putIfAbsent(chatID, UsersStates.STATIC.getStateTitle());
 
         // handling of inline buttons pressing
         if (update.hasCallbackQuery()) {
+            buttonsClickCounter++;
+            logger.info("User with ID:[" + chatID + "] has clicked on \"Адреса приёма\" button");
             String data = update.getCallbackQuery().getData();
             SendPhoto addresses_message = new SendPhoto();
             addresses_message.setChatId(chatID);
@@ -102,6 +116,10 @@ public class MedGuideBot extends SpringWebhookBot {
             } else {
 
                 if (update.getMessage().getText().equals("\uD83D\uDCB3 Информация об оплате")) {
+
+                    buttonsClickCounter++;
+                    logger.info("User with ID:[" + chatID + "] has clicked on \"Информация об оплате\" button");
+
                     SendPhoto paymentsInfoMessage = new SendPhoto();
 
                     paymentsInfoMessage.setChatId(chatID);
@@ -134,11 +152,11 @@ public class MedGuideBot extends SpringWebhookBot {
                     switch (update.getMessage().getText()) {
 
                         case "Гастроэнтеролог" -> {
-                                sendPhoto.setChatId(chatID);
-                                sendPhoto.setCaption("<b>Гастроэнтеролог - Брагина Таисья Владимировна</b>\n" +
-                                        "Подробнее <a href=\"https://medgid.pro/specialist/bragina-taisya-vladimirovna/\">по ссылке</a>");
-                                sendPhoto.setPhoto(new InputFile(
-                                        new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/bragina_t_v.jpg")));
+                            sendPhoto.setChatId(chatID);
+                            sendPhoto.setCaption("<b>Гастроэнтеролог - Морозов Андрей Юрьевич</b>\n" +
+                                    "Подробнее <a href=\"https://medgid.pro/specialist/morozov-andrej-yurevich/\">по ссылке</a>");
+                            sendPhoto.setPhoto(new InputFile(
+                                    new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/morozov_a_u.jpg")));
                         }
 
                         case "Психолог", "Хэлс коуч", "Нутрициолог" -> {
@@ -159,10 +177,10 @@ public class MedGuideBot extends SpringWebhookBot {
 
                         case "Терапевт" -> {
                             sendPhoto.setChatId(chatID);
-                            sendPhoto.setCaption("<b>Терапевт - Пейкова Элина Викторовна</b>\n" +
-                                    "Подробнее <a href=\"https://medgid.pro/specialist/pejkova-elina-viktorovna/\">по ссылке</a>");
+                            sendPhoto.setCaption("<b>Терапевт - Брагина Таисья Владимировна</b>\n" +
+                                    "Подробнее <a href=\"https://medgid.pro/specialist/bragina-taisya-vladimirovna/\">по ссылке</a>");
                             sendPhoto.setPhoto(new InputFile(
-                                    new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/peykova_e_v.jpg")));
+                                    new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/bragina_t_v.jpg")));
                         }
 
                         case "Кардиолог" -> {
@@ -181,12 +199,12 @@ public class MedGuideBot extends SpringWebhookBot {
                                     new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/amirova_t_o.jpg")));
                         }
 
-                        case "Дерматовенеролог" -> {
+                        case "Дерматовенеролог, косметолог" -> {
                             sendPhoto.setChatId(chatID);
-                            sendPhoto.setCaption("<b>Дерматовенеролог - Кущ Ирина Вячеславовна</b>\n" +
-                                    "Подробнее <a href=\"https://medgid.pro/specialist/kushh-irina-vyacheslavovna/\">по ссылке</a>");
+                            sendPhoto.setCaption("<b>Дерматовенеролог, косметоло - Пейкова Элина Викторовна</b>\n" +
+                                    "Подробнее <a href=\"https://medgid.pro/specialist/pejkova-elina-viktorovna/\">по ссылке</a>");
                             sendPhoto.setPhoto(new InputFile(
-                                    new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/kush_i_v.jpg")));
+                                    new File("src/main/java/pro/medguide/MedGuideTelegramBot/materials/images/peykova_e_v.jpg")));
                         }
 
                         default -> {
