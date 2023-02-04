@@ -1,5 +1,5 @@
 # MedGuide Bot
-Telegram bot for [medgid.pro](medgid.pro) service
+Telegram bot for [http://medgid.pro](medgid.pro) service
 ## Made by mBayzigitov
 
 # With this bot you can:
@@ -11,7 +11,7 @@ Telegram bot for [medgid.pro](medgid.pro) service
 
 # Sources
 
-- <http://medgid.pro> | Telegram link
+- <https://t.me/medgid_bot> | Telegram link
 
 
 <p align="center">QR-code<br><img src="https://user-images.githubusercontent.com/91501162/216774309-100cabf6-b8c2-4950-8a8b-861bb6863dc5.jpg" alt="mfm-qr" width="400"></p>
