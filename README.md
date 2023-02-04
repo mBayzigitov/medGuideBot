@@ -1,5 +1,5 @@
 # MedGuide Bot
-Telegram bot for [http://medgid.pro](medgid.pro) service
+Telegram bot for [medgid.pro](http://medgid.pro) service
 ## Made by mBayzigitov
 
 # With this bot you can:
