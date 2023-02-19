@@ -14,7 +14,7 @@ Telegram bot for [medgid.pro](http://medgid.pro) service
 - <https://t.me/medgid_bot> | Telegram link
 
 
-<p align="center">QR-code<br><img src="https://user-images.githubusercontent.com/91501162/216774309-100cabf6-b8c2-4950-8a8b-861bb6863dc5.jpg" alt="mfm-qr" width="400"></p>
+<p align="center">QR-code<br><br><img src="https://user-images.githubusercontent.com/91501162/216774309-100cabf6-b8c2-4950-8a8b-861bb6863dc5.jpg" alt="mfm-qr" width="400"></p>
 
 # While working on this project I practiced:
 
